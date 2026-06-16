@@ -6,7 +6,7 @@ type Spy<T extends (...args: any) => any> = ((...args: Parameters<T>) => ReturnT
     calls: Parameters<T>[];
 };
 
-function spy<T extends (...args: any[]) => any>(func: (...args: any) => any): Spy<T> {
+function spy<T extends (...args: any[]) => any>(func: T): Spy<T> {
     const calls: Parameters<T>[] = [];
 
     const wrapper = function (this: ThisParameterType<T>, ...args: Parameters<T>): ReturnType<T> {
