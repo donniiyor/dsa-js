@@ -1,4 +1,4 @@
-function memoize<T extends (...params: number[]) => number>(
+function memoize<T extends (this: ThisParameterType<any>, ...params: number[]) => number>(
     fn: T,
 ): (...params: Parameters<T>) => ReturnType<T> {
     const cache = new Map<string, any>();
