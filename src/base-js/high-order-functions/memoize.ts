@@ -1,21 +1,46 @@
-function memoize<T extends (this: ThisParameterType<any>, ...params: number[]) => number>(
+function memoize<T extends (...args: any[]) => any>(
     fn: T,
-): (...params: Parameters<T>) => ReturnType<T> {
-    const cache = new Map<string, any>();
+): (this: ThisParameterType<T>, ...args: Parameters<T>) => ReturnType<T> {
+    type Node = {
+        primitive: Map<any, Node>;
+        object: WeakMap<object, Node>;
+        hasValue: boolean;
+        value: ReturnType<T>;
+    };
 
-    // TODO: handle reference params
-    function hash(...args: any[]) {
-        return JSON.stringify(args);
-    }
+    const createNode = (): Node => ({
+        primitive: new Map(),
+        object: new WeakMap(),
+        hasValue: false,
+        value: undefined as ReturnType<T>,
+    });
+
+    const root = createNode();
 
     return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
-        const key = hash(...args);
+        let node = root;
 
-        if (cache.has(key)) return cache.get(key);
+        for (const arg of args) {
+            const isObject = (typeof arg === "object" && arg !== null) || typeof arg === "function";
+
+            const map = isObject ? node.object : node.primitive;
+
+            let next = map.get(arg);
+
+            if (!next) {
+                next = createNode();
+                map.set(arg, next);
+            }
+
+            node = next;
+        }
+
+        if (node.hasValue) return node.value;
 
         const result = fn.apply(this, args);
 
-        cache.set(key, result);
+        node.value = result;
+        node.hasValue = true;
 
         return result;
     };
