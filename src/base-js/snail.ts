@@ -5,7 +5,7 @@ declare global {
 }
 
 Array.prototype.snail = function <T>(this: T[], rowsCount: number, colsCount: number): T[][] {
-    if (rowsCount * colsCount !== this.length) throw new Error("Invalid input.");
+    if (rowsCount * colsCount !== this.length) return [];
 
     const result: T[][] = new Array<T>(rowsCount)
         .fill(null as T)

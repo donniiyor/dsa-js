@@ -3,8 +3,9 @@ function memoize<T extends (this: ThisParameterType<any>, ...params: number[]) =
 ): (...params: Parameters<T>) => ReturnType<T> {
     const cache = new Map<string, any>();
 
-    function hash(...numbers: number[]) {
-        return numbers.join("-");
+    // TODO: handle reference params
+    function hash(...args: any[]) {
+        return JSON.stringify(args);
     }
 
     return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
