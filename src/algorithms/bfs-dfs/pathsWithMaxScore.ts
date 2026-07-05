@@ -16,6 +16,8 @@ function pathsWithMaxScore(board: string[]): [number, number] {
     while (queue.length) {
         const [y, x, score] = queue.shift()!;
 
+        if ((y + x - 1) * 9 + score < maxScore) continue;
+
         for (const [oY, oX] of offsets) {
             const [dY, dX]: [number, number] = [y + oY, x + oX];
 
