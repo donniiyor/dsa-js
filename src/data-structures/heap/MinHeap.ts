@@ -12,10 +12,14 @@ export class MinHeap<T> {
     }
 
     public peek(): T | undefined {
+        return this.data[0];
+    }
+
+    public poll(): T | undefined {
         const firstElement = this.data[0];
 
-        if (!firstElement) return undefined;
-        if (this.size() === 1) return this.data.pop();
+        if (this.isEmpty()) return undefined;
+        if (this.data.length === 1) return this.data.pop();
 
         this.data[0] = this.data.pop()!;
         this.heapifyDown();
@@ -29,7 +33,7 @@ export class MinHeap<T> {
     }
 
     private heapifyUp() {
-        let currentIndex = this.size() - 1;
+        let currentIndex = this.data.length - 1;
 
         while (currentIndex !== 0) {
             const parentIndex = this.getParentIndex(currentIndex)!;
@@ -80,7 +84,7 @@ export class MinHeap<T> {
     private getLeftChildIndex(index: number): number | undefined {
         const leftChildIndex = index * 2 + 1;
 
-        if (leftChildIndex >= this.size()) return undefined;
+        if (leftChildIndex >= this.data.length) return undefined;
 
         return leftChildIndex;
     }
@@ -88,7 +92,7 @@ export class MinHeap<T> {
     private getRightChildIndex(index: number): number | undefined {
         const rightChildIndex = index * 2 + 2;
 
-        if (rightChildIndex >= this.size()) return undefined;
+        if (rightChildIndex >= this.data.length) return undefined;
 
         return rightChildIndex;
     }
@@ -97,16 +101,3 @@ export class MinHeap<T> {
         [this.data[aIndex], this.data[bIndex]] = [this.data[bIndex], this.data[aIndex]];
     }
 }
-
-const minHeap: MinHeap<number> = new MinHeap((a, b) => a - b);
-
-minHeap.add(15);
-minHeap.add(8);
-minHeap.add(10);
-minHeap.add(6);
-minHeap.add(7);
-minHeap.add(1);
-console.log(minHeap.peek());
-console.log(minHeap.peek());
-console.log(minHeap.peek());
-console.log(minHeap.peek());
