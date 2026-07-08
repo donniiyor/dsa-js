@@ -3,14 +3,15 @@ export class RoundRobinBalancer {
 
     constructor(private servers: string[]) {}
 
-    public next() {
-        if (!this.servers.length) throw new Error("No servers available");
+    public next(): string {
+        if (this.servers.length === 0) {
+            throw new Error("No servers available");
+        }
 
-        const currentIndex = this.index++;
+        const server = this.servers[this.index % this.servers.length];
+        this.index++;
 
-        if (this.index === 2 ** 53 - 1) this.index = 0;
-
-        return this.servers[currentIndex % this.servers.length];
+        return server;
     }
 
     public add(server: string) {
