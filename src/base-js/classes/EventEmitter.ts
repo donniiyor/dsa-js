@@ -5,7 +5,7 @@ type Subscription = {
 };
 
 class EventEmitter {
-    private events = new Map<string, Set<Callback>>();
+    private events: Map<string, Set<Callback>> = new Map();
 
     subscribe(eventName: string, callback: Callback): Subscription {
         if (!this.events.has(eventName)) {
